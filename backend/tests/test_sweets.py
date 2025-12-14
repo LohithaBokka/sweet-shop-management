@@ -34,8 +34,18 @@ def test_update_sweet():
 
 
 def test_delete_sweet():
-    response = client.delete("/api/sweets/1")
+    create_response = client.post("/api/sweets", json={
+        "name": "Ladoo",
+        "category": "Indian",
+        "price": 10,
+        "quantity": 5
+    })
+
+    sweet_id = create_response.json()["id"]
+
+    response = client.delete(f"/api/sweets/{sweet_id}")
     assert response.status_code == 204
+
 
 def test_purchase_sweet():
     sweet_name = f"Candy{random.randint(1,10000)}"

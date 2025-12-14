@@ -72,14 +72,15 @@ def update_sweet(sweet_id: int, sweet: SweetUpdate, db: Session = Depends(get_db
     return db_sweet
 
 
-@router.delete("/{sweet_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{sweet_id}", status_code=204)
 def delete_sweet(sweet_id: int, db: Session = Depends(get_db)):
-    db_sweet = db.query(Sweet).filter(Sweet.id == sweet_id).first()
-    if not db_sweet:
+    sweet = db.query(Sweet).filter(Sweet.id == sweet_id).first()
+    if not sweet:
         raise HTTPException(status_code=404, detail="Sweet not found")
-    
-    db.delete(db_sweet)
+
+    db.delete(sweet)
     db.commit()
+
     return
 
 @router.post("/{sweet_id}/purchase", response_model=SweetOut)
